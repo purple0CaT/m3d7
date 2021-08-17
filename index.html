@@ -36,6 +36,14 @@
         border: 1px solid white;
         box-shadow: 0 1px 5px gray;
       }
+      a{
+        text-decoration: none;
+        color: unset;
+      }
+      a:hover{
+        text-decoration: none;
+
+      }
     </style>
     <!--
       PAIR PROGRAMMING EXERCISE.
@@ -120,22 +128,24 @@
 
       // DECLARE ROW
       let row = document.getElementById("displayUsers");
+
+
       // Card loadaer
       function loadCard(data) {
         row.innerHTML = "";
         data.forEach((user) => {
           row.innerHTML += `
         <div class="col-3 my-2">
-        <div class="card h-100">
+        <a class="card h-100" href="${user.website}">
   <div class="card-body">
     <h6 class="card-title">${user.name}</h6>
     <p class="card-text"><small>email: </small><p>${user.email}</p>
     <p class="card-text"><small>phone: </small>${user.phone}</p>
     <p class="card-text"><small>username: </small>${user.username}</p>
-    <p class="card-text"><small class="font-weight-bold">Address:</small> ${user.address.city}, ${user.address.street}, ${user.address.suite}, (${user.address.geo.lat}, ${user.address.geo.lng})</p>
+    <p class="card-text"><small class="font-weight-bold">Address:</small> ${user.address.city}, ${user.address.suite}, ${user.address.street},  (${user.address.geo.lat}, ${user.address.geo.lng})</p>
     <p class="card-text text-muted"><small>id: ${user.id}</small></p>
   </div>
-  </div>
+  </a>
   </div>`;
   });
   }
@@ -179,7 +189,18 @@
   </div>
   </div>`;
   });
+      }
 
+      // sorting array
+      function sortIt(){
+        let names = []
+
+        dataBase.forEach(element => {
+          names.push(element.name)
+        });
+
+        names.sort()
+        console.log(names)
       }
     </script>
   </body>
