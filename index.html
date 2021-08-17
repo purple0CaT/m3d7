@@ -39,11 +39,14 @@
       a{
         text-decoration: none;
         color: unset;
+        transition: 0.2s;
       }
       a:hover{
         text-decoration: none;
-
+        color: unset;
+        box-shadow: 0 1px 10px gray;
       }
+
     </style>
     <!--
       PAIR PROGRAMMING EXERCISE.
@@ -136,14 +139,16 @@
         data.forEach((user) => {
           row.innerHTML += `
         <div class="col-3 my-2">
-        <a class="card h-100" href="${user.website}">
+        <a class="card h-100" href="${user.website}" target="_blank">
   <div class="card-body">
     <h6 class="card-title">${user.name}</h6>
+    <div id="hideCard" class="lead" style="font-size: 0.9rem">
     <p class="card-text"><small>email: </small><p>${user.email}</p>
     <p class="card-text"><small>phone: </small>${user.phone}</p>
     <p class="card-text"><small>username: </small>${user.username}</p>
     <p class="card-text"><small class="font-weight-bold">Address:</small> ${user.address.city}, ${user.address.suite}, ${user.address.street},  (${user.address.geo.lat}, ${user.address.geo.lng})</p>
     <p class="card-text text-muted"><small>id: ${user.id}</small></p>
+  </div>
   </div>
   </a>
   </div>`;
@@ -178,17 +183,9 @@
 
       // Only names in list
       function onlyNames() {
-        row.innerHTML = "";
-        dataBase.forEach((user) => {
-          row.innerHTML += `
-        <div class="col-3 my-2">
-        <div class="card h-100">
-  <div class="card-body">
-    <h6 class="card-title">${user.name}</h6>
-  </div>
-  </div>
-  </div>`;
-  });
+        let cards = document.querySelectorAll('#hideCard')
+        
+        cards.forEach(card => card.classList.toggle('d-none'))
       }
 
       // sorting array
