@@ -7,6 +7,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
+    <title>M3D7</title>
 
     <!-- Bootstrap CSS -->
     <link
@@ -15,17 +16,38 @@
       integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
       crossorigin="anonymous"
     />
+
+    <style>
+      #searchSelect{
+        border-radius: 5px;
+        padding: 0 10px;
+        box-shadow: 0 5px 5px rgba(128, 128, 128, 0.384);
+      }
+      button {
+        border-radius: 5px;
+        border: 1px solid rgb(102, 102, 102);
+        background-color: rgb(102, 102, 102);
+        color: white;
+        transition: 0.2s;
+      }
+      button:hover{
+        background-color: white;
+        color: gray;
+        border: 1px solid white;
+        box-shadow: 0 1px 5px gray;
+      }
+    </style>
     <!--
       PAIR PROGRAMMING EXERCISE.
       1 DRIVER, 1 NAVIGATOR.
       1 Exercise each. Use GitHub to share the code.
       Less exercise, more complicated. 
-      Ex1) Get and display, using async / await, the users from: https://jsonplaceholder.typicode.com/users 
-      Ex2) Create a dropdown (<select>) that allows the user to select between name, username and email. 
-           Create then a filter. When the user types in something, you should filter the user based on the input and on the value of the select.
-           Es.: select on NAME. Filter input = Glenna, only user id number 9 should remain
-      Ex3) Create a function that, from the list of users, extracts only the names
-      Ex4) Create a function that, from the list of users, creates an array of addresses as string and not as an object. Like:
+      + Ex1) Get and display, using async / await, the users from: https://jsonplaceholder.typicode.com/users 
+      + Ex2) Create a dropdown (<select>) that allows the user to select between name, username and email. 
+          Create then a filter. When the user types in something, you should filter the user based on the input and on the value of the select.
+          Es.: select on NAME. Filter input = Glenna, only user id number 9 should remain
+      ? Ex3) Create a function that, from the list of users, extracts only the names
+      + Ex4) Create a function that, from the list of users, creates an array of addresses as string and not as an object. Like:
               {
               "street": "Victor Plains",
               "suite": "Suite 879",
@@ -45,6 +67,38 @@
   </head>
 
   <body>
+    <div class="container">
+
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h1 class="display-4">search</h1>
+          <div class="d-flex">
+
+            <select name="pets" id="searchSelect">
+              <option value="name">name</option>
+              <option value="username">username</option>
+              <option value="email">email</option>
+            </select>
+
+            <input
+              class="form-control ml-3"
+              type="text"
+              placeholder="...search"
+              onkeyup="searchIt(this.value)"
+            />
+          </div>
+        </div>
+        <div class="d-flex mt-3 px-3">
+          <button onclick="onlyNames()">Only Names</button>
+        </div>
+      </div>
+
+      <div class="row" id="displayUsers">
+
+      </div>
+    </div>
+
+    <!-- SCRIPTS -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -58,12 +112,75 @@
 
     <!-- Write here -->
     <script>
-      const dataWithAsync = async () => {
-        let response = await fetch("https://jsonplaceholder.typicode.com/users ");
-        let data = await response.json();
-
-        console.log(data);
+      // dataBase
+      let dataBase;
+      window.onload = () => {
+        loadData();
       };
+
+      // DECLARE ROW
+      let row = document.getElementById("displayUsers");
+      // Card loadaer
+      function loadCard(data) {
+        row.innerHTML = "";
+        data.forEach((user) => {
+          row.innerHTML += `
+        <div class="col-3 my-2">
+        <div class="card h-100">
+  <div class="card-body">
+    <h6 class="card-title">${user.name}</h6>
+    <p class="card-text"><small>email: </small><p>${user.email}</p>
+    <p class="card-text"><small>phone: </small>${user.phone}</p>
+    <p class="card-text"><small>username: </small>${user.username}</p>
+    <p class="card-text"><small class="font-weight-bold">Address:</small> ${user.address.city}, ${user.address.street}, ${user.address.suite}, (${user.address.geo.lat}, ${user.address.geo.lng})</p>
+    <p class="card-text text-muted"><small>id: ${user.id}</small></p>
+  </div>
+  </div>
+  </div>`;
+  });
+  }
+
+      const loadData = async () => {
+        try {
+          let response = await fetch(
+            "https://jsonplaceholder.typicode.com/users "
+          );
+          let data = await response.json();
+          dataBase = data;
+          loadCard(dataBase);
+        } catch (err) {
+          console.log(err);
+        }
+      };
+      // SEARCH
+      function searchIt(value) {
+        if(value.length > 2){
+          
+        let target = document.getElementById("searchSelect").value
+
+        let thisUser = dataBase.filter(data => data[target].toLowerCase().includes(value.toLowerCase()))
+        loadCard(thisUser)     
+        
+        } else {
+          loadCard(dataBase)
+        }
+      }
+
+      // Only names in list
+      function onlyNames() {
+        row.innerHTML = "";
+        dataBase.forEach((user) => {
+          row.innerHTML += `
+        <div class="col-3 my-2">
+        <div class="card h-100">
+  <div class="card-body">
+    <h6 class="card-title">${user.name}</h6>
+  </div>
+  </div>
+  </div>`;
+  });
+
+      }
     </script>
   </body>
 </html>
